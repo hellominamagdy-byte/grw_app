@@ -205,24 +205,42 @@ class _FeaturedBentoGrid extends StatelessWidget {
 
   const _FeaturedBentoGrid({required this.cards});
 
+  static const _cardHeight = 190.0;
+  static const _spacing = 12.0;
+
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width - 32;
-    final cardSize = (width - 12) / 2;
+    final displayCards = cards.take(4).toList();
+    if (displayCards.isEmpty) return const SizedBox.shrink();
 
-    return SizedBox(
-      height: cardSize * 2 + 12,
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 1,
-        ),
-        itemCount: cards.length.clamp(0, 4),
-        itemBuilder: (context, index) => _FeaturedCard(card: cards[index]),
-      ),
+    Widget row(int leftIndex, int rightIndex) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: SizedBox(
+              height: _cardHeight,
+              child: _FeaturedCard(card: displayCards[leftIndex]),
+            ),
+          ),
+          const SizedBox(width: _spacing),
+          Expanded(
+            child: SizedBox(
+              height: _cardHeight,
+              child: _FeaturedCard(card: displayCards[rightIndex]),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        row(0, 1),
+        const SizedBox(height: _spacing),
+        row(2, 3),
+      ],
     );
   }
 }

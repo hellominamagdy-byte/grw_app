@@ -13,6 +13,7 @@ Future<void> showStoryViewerSheet(
     context: context,
     isScrollControlled: true,
     useRootNavigator: true,
+    isDismissible: true,
     backgroundColor: Colors.transparent,
     barrierColor: Colors.black.withValues(alpha: 0.5),
     useSafeArea: false,
@@ -23,7 +24,12 @@ Future<void> showStoryViewerSheet(
         height: height,
         child: StoryViewerScreen(
           category: category,
-          onClose: () => Navigator.of(sheetContext, rootNavigator: true).pop(),
+          onClose: () {
+            final navigator = Navigator.of(sheetContext, rootNavigator: true);
+            if (navigator.canPop()) {
+              navigator.pop();
+            }
+          },
         ),
       );
     },
@@ -81,7 +87,11 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
   }
 
   void _dismiss() {
-    widget.onClose();
+    _progressController.removeStatusListener(_onProgressComplete);
+    _progressController.stop();
+    if (mounted) {
+      widget.onClose();
+    }
   }
 
   void _onProgressComplete(AnimationStatus status) {
@@ -137,8 +147,9 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
       return const SizedBox.shrink();
     }
 
-    final topPadding = MediaQuery.of(context).padding.top;
-    const headerHeight = 88.0;
+    final topPadding = MediaQuery.paddingOf(context).top;
+    const controlsHeight = 72.0;
+    final tapZoneTop = topPadding + controlsHeight;
 
     return Material(
       color: _backgroundColor,
@@ -160,7 +171,7 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
               left: 0,
               right: 0,
               bottom: 0,
-              top: topPadding + headerHeight,
+              top: tapZoneTop,
               child: Row(
                 children: [
                   Expanded(
@@ -188,39 +199,42 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                 color: Colors.transparent,
                 child: SafeArea(
                   bottom: false,
-                  child: SizedBox(
-                    height: headerHeight - topPadding,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                          child: Row(
-                            children: List.generate(_articles.length, (index) {
-                              return Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    left: index == 0 ? 0 : 2,
-                                    right: index == _articles.length - 1 ? 0 : 2,
-                                  ),
-                                  child: _StoryProgressBar(
-                                    active: index == _currentIndex,
-                                    completed: index < _currentIndex,
-                                    progress: index == _currentIndex
-                                        ? _progressController
-                                        : null,
-                                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                        child: Row(
+                          children: List.generate(_articles.length, (index) {
+                            return Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  left: index == 0 ? 0 : 2,
+                                  right: index == _articles.length - 1 ? 0 : 2,
                                 ),
-                              );
-                            }),
-                          ),
+                                child: _StoryProgressBar(
+                                  active: index == _currentIndex,
+                                  completed: index < _currentIndex,
+                                  progress: index == _currentIndex
+                                      ? _progressController
+                                      : null,
+                                ),
+                              ),
+                            );
+                          }),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Colors.white),
-                          onPressed: _dismiss,
+                      ),
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: _dismiss,
+                        child: const SizedBox(
+                          width: 56,
+                          height: 48,
+                          child: Icon(Icons.close, color: Colors.white, size: 24),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
