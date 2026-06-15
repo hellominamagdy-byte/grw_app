@@ -16,6 +16,39 @@ class _MarketTabState extends State<MarketTab> {
   String _turnoverTab = 'Turnover';
   bool _investorByPercent = true;
   int _breadthPage = 0;
+  final PageController _breadthPageController = PageController();
+
+  @override
+  void dispose() {
+    _breadthPageController.dispose();
+    super.dispose();
+  }
+
+  void _goBreadthPrev() {
+    if (_breadthPage > 0) {
+      _breadthPageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _goBreadthNext() {
+    if (_breadthPage < _breadthPages.length - 1) {
+      _breadthPageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _goBreadthPage(int index) {
+    _breadthPageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
 
   static const _turnoverTabs = ['Turnover', 'Volume', 'Gainers', 'Losers'];
 
@@ -438,26 +471,68 @@ class _MarketTabState extends State<MarketTab> {
                             ),
                           ),
                           const SizedBox(height: _cardInnerGap),
-                          Row(
-                            children:
-                                _breadthPages[_breadthPage].items.map((item) {
-                              return Expanded(
-                                child: _BreadthDonut(
-                                  label: item.label,
-                                  value: item.value,
-                                  percent: item.percent,
-                                  color: item.color,
+                          SizedBox(
+                            height: 136,
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                PageView.builder(
+                                  controller: _breadthPageController,
+                                  onPageChanged: (index) =>
+                                      setState(() => _breadthPage = index),
+                                  itemCount: _breadthPages.length,
+                                  itemBuilder: (context, index) {
+                                    return Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: _breadthPages[index].items
+                                          .map((item) {
+                                        return Expanded(
+                                          child: _BreadthDonut(
+                                            label: item.label,
+                                            value: item.value,
+                                            percent: item.percent,
+                                            color: item.color,
+                                          ),
+                                        );
+                                      }).toList(),
+                                    );
+                                  },
                                 ),
-                              );
-                            }).toList(),
+                                Positioned(
+                                  left: -4,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Center(
+                                    child: _BreadthNavArrow(
+                                      icon: Icons.chevron_left,
+                                      enabled: _breadthPage > 0,
+                                      onTap: _goBreadthPrev,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  right: -4,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Center(
+                                    child: _BreadthNavArrow(
+                                      icon: Icons.chevron_right,
+                                      enabled:
+                                          _breadthPage < _breadthPages.length - 1,
+                                      onTap: _goBreadthNext,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: List.generate(_breadthPages.length, (i) {
                               return GestureDetector(
-                                onTap: () =>
-                                    setState(() => _breadthPage = i),
+                                onTap: () => _goBreadthPage(i),
                                 behavior: HitTestBehavior.opaque,
                                 child: Container(
                                   width: 6,
@@ -1000,6 +1075,48 @@ class _TurnoverTable extends StatelessWidget {
   }
 }
 
+class _BreadthNavArrow extends StatelessWidget {
+  final IconData icon;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  const _BreadthNavArrow({
+    required this.icon,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final grw = context.grw;
+
+    return GestureDetector(
+      onTap: enabled ? onTap : null,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+          color: grw.surface,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF0A1628).withValues(alpha: 0.08),
+              blurRadius: 4,
+              offset: const Offset(0, 1),
+            ),
+          ],
+        ),
+        child: Icon(
+          icon,
+          size: 16,
+          color: enabled ? grw.textPrimary : grw.borderLight,
+        ),
+      ),
+    );
+  }
+}
+
 class _BreadthDonut extends StatelessWidget {
   final String label;
   final String value;
@@ -1020,6 +1137,7 @@ class _BreadthDonut extends StatelessWidget {
     final percentLabel = '${percent.toStringAsFixed(1)}%';
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
           width: 88,
@@ -1067,6 +1185,7 @@ class _BreadthDonut extends StatelessWidget {
             fontFamily: 'Inter',
             fontWeight: FontWeight.w700,
             fontSize: 16,
+            height: 1.1,
             color: grw.textPrimary,
           ),
         ),
@@ -1075,6 +1194,7 @@ class _BreadthDonut extends StatelessWidget {
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 11,
+            height: 1.1,
             color: color,
           ),
         ),
