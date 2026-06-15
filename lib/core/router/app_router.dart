@@ -6,6 +6,7 @@ import '../../features/auth/forgot_password/forgot_password_screen.dart';
 import '../../features/auth/forgot_password/create_password_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/news/news_list_screen.dart';
+import '../../features/market/market_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -56,6 +57,11 @@ class AppRouter {
           final category = state.uri.queryParameters['category'];
           return NewsListScreen(initialCategory: category);
         },
+      ),
+      GoRoute(
+        path: '/market',
+        name: 'market',
+        builder: (context, state) => const MarketScreen(),
       ),
     ],
   );

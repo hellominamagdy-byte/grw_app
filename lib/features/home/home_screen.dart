@@ -10,6 +10,7 @@ import 'package:grw_app/features/news/news_data.dart';
 import 'package:grw_app/features/news/story_viewed_provider.dart';
 import 'package:grw_app/features/news/story_viewer_screen.dart';
 import 'package:grw_app/features/news/widgets/story_ring.dart';
+import 'package:grw_app/features/market/market_screen.dart';
 import 'package:grw_app/features/wallet/wallet_screen.dart';
 import 'package:intl/intl.dart';
 
@@ -35,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _HomeTab(),
           const WalletTab(),
           const ExploreTab(),
-          _PlaceholderTab('Market', Icons.bar_chart_outlined),
+          const MarketTab(),
           const MyHubTab(),
         ],
       ),
@@ -779,37 +780,6 @@ class _InvestmentItem extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── Placeholder Tab ──────────────────────────────────────────────────────────
-
-class _PlaceholderTab extends StatelessWidget {
-  final String name;
-  final IconData icon;
-
-  const _PlaceholderTab(this.name, this.icon);
-
-  @override
-  Widget build(BuildContext context) {
-    final grw = context.grw;
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 48, color: GrwColors.primary),
-          const SizedBox(height: 16),
-          Text(
-            '$name — Coming Soon',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 18,
-              color: grw.textSecondary,
-            ),
           ),
         ],
       ),
