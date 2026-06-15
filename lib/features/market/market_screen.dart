@@ -21,63 +21,298 @@ class _MarketTabState extends State<MarketTab> {
 
   static const _indices = [
     (name: 'EGX30', price: '50,818.84', change: '-437.81 (-0.85%)'),
-    (name: 'EGX30CAPPED', price: '14,986.99', change: '-215.40 (-1.44%)'),
+    (name: 'EGX30CAPPED', price: '62,249.00', change: '-535.12 (-0.85%)'),
     (name: 'EGX70 EWI', price: '8,412.55', change: '-62.18 (-0.73%)'),
     (name: 'EGX100 EWI', price: '12,304.10', change: '-98.22 (-0.79%)'),
   ];
 
-  static const _turnoverRows = [
-    (
-      ticker: 'PRDC',
-      initial: 'P',
-      price: '6.25',
-      change: '2.63%',
-      isUp: true,
-      turnover: '1.36B',
-      logoColor: Color(0xFFBA1A1A),
+  static const _turnoverByTab = {
+    'Turnover': (
+      lastColumn: 'Turnover',
+      rows: [
+        (
+          ticker: 'PRDC',
+          initial: 'P',
+          price: '6.25',
+          change: '2.63%',
+          isUp: true,
+          value: '1.36B',
+          logoColor: Color(0xFFBA1A1A),
+        ),
+        (
+          ticker: 'KORA',
+          initial: 'K',
+          price: '3.55',
+          change: '19.53%',
+          isUp: true,
+          value: '980.16M',
+          logoColor: Color(0xFF75777D),
+        ),
+        (
+          ticker: 'GDWA',
+          initial: 'G',
+          price: '0.773',
+          change: '-2.15%',
+          isUp: false,
+          value: '911.09M',
+          logoColor: Color(0xFF1B1B1D),
+        ),
+        (
+          ticker: 'CCAP',
+          initial: 'C',
+          price: '5.14',
+          change: '-0.19%',
+          isUp: false,
+          value: '586.17M',
+          logoColor: Color(0xFF0059C7),
+        ),
+        (
+          ticker: 'COMI',
+          initial: 'C',
+          price: '131.69',
+          change: '0.49%',
+          isUp: true,
+          value: '478.14M',
+          logoColor: Color(0xFF0059C7),
+        ),
+      ],
     ),
-    (
-      ticker: 'KORA',
-      initial: 'K',
-      price: '3.55',
-      change: '19.53%',
-      isUp: true,
-      turnover: '980.16M',
-      logoColor: Color(0xFF75777D),
+    'Volume': (
+      lastColumn: 'Volume',
+      rows: [
+        (
+          ticker: 'GDWA',
+          initial: 'G',
+          price: '0.773',
+          change: '-2.15%',
+          isUp: false,
+          value: '1.17B',
+          logoColor: Color(0xFF1B1B1D),
+        ),
+        (
+          ticker: 'ARAB',
+          initial: 'A',
+          price: '0.206',
+          change: '1.98%',
+          isUp: true,
+          value: '311.80M',
+          logoColor: Color(0xFF1B8A44),
+        ),
+        (
+          ticker: 'KORA',
+          initial: 'K',
+          price: '3.55',
+          change: '19.53%',
+          isUp: true,
+          value: '270.30M',
+          logoColor: Color(0xFF75777D),
+        ),
+        (
+          ticker: 'PRDC',
+          initial: 'P',
+          price: '6.25',
+          change: '2.63%',
+          isUp: true,
+          value: '225.68M',
+          logoColor: Color(0xFFBA1A1A),
+        ),
+        (
+          ticker: 'ASPI',
+          initial: 'A',
+          price: '0.31',
+          change: '-6.91%',
+          isUp: false,
+          value: '135.01M',
+          logoColor: Color(0xFF45474C),
+        ),
+      ],
     ),
-    (
-      ticker: 'GDWA',
-      initial: 'G',
-      price: '0.773',
-      change: '-2.15%',
-      isUp: false,
-      turnover: '911.09M',
-      logoColor: Color(0xFF1B1B1D),
+    'Gainers': (
+      lastColumn: 'Volume',
+      rows: [
+        (
+          ticker: 'KORA',
+          initial: 'K',
+          price: '3.55',
+          change: '19.53%',
+          isUp: true,
+          value: '270.30M',
+          logoColor: Color(0xFF75777D),
+        ),
+        (
+          ticker: 'TYCN',
+          initial: 'T',
+          price: '21.65',
+          change: '9.62%',
+          isUp: true,
+          value: '48.20M',
+          logoColor: Color(0xFF0059C7),
+        ),
+        (
+          ticker: 'ARVA',
+          initial: 'A',
+          price: '8.44',
+          change: '8.19%',
+          isUp: true,
+          value: '35.10M',
+          logoColor: Color(0xFF1B8A44),
+        ),
+        (
+          ticker: 'ISMQ',
+          initial: 'I',
+          price: '12.30',
+          change: '6.45%',
+          isUp: true,
+          value: '28.90M',
+          logoColor: Color(0xFFBA1A1A),
+        ),
+        (
+          ticker: 'VALU',
+          initial: 'V',
+          price: '5.88',
+          change: '5.12%',
+          isUp: true,
+          value: '22.40M',
+          logoColor: Color(0xFF0059C7),
+        ),
+      ],
     ),
-    (
-      ticker: 'CCAP',
-      initial: 'C',
-      price: '5.14',
-      change: '-0.19%',
-      isUp: false,
-      turnover: '586.17M',
-      logoColor: Color(0xFF0059C7),
+    'Losers': (
+      lastColumn: 'Volume',
+      rows: [
+        (
+          ticker: 'ASPI_r3',
+          initial: 'A',
+          price: '0.11',
+          change: '-7.56%',
+          isUp: false,
+          value: '72.01M',
+          logoColor: Color(0xFF45474C),
+        ),
+        (
+          ticker: 'CRST',
+          initial: 'C',
+          price: '1.16',
+          change: '-7.20%',
+          isUp: false,
+          value: '51.12M',
+          logoColor: Color(0xFF1B1B1D),
+        ),
+        (
+          ticker: 'ASPI',
+          initial: 'A',
+          price: '0.31',
+          change: '-6.91%',
+          isUp: false,
+          value: '135.01M',
+          logoColor: Color(0xFF45474C),
+        ),
+        (
+          ticker: 'KASABF',
+          initial: 'K',
+          price: '3.82',
+          change: '-6.14%',
+          isUp: false,
+          value: '1.73M',
+          logoColor: Color(0xFF75777D),
+        ),
+        (
+          ticker: 'COSG',
+          initial: 'C',
+          price: '1.55',
+          change: '-6.06%',
+          isUp: false,
+          value: '41.41M',
+          logoColor: Color(0xFFBA1A1A),
+        ),
+      ],
     ),
-    (
-      ticker: 'COMI',
-      initial: 'C',
-      price: '131.69',
-      change: '0.49%',
-      isUp: true,
-      turnover: '478.14M',
-      logoColor: Color(0xFF0059C7),
-    ),
-  ];
+  };
 
-  static const _breadth = [
-    (label: 'Advancing', count: '49', percent: 22.0, color: Color(0xFF1B8A44)),
-    (label: 'Unchanged', count: '17', percent: 7.6, color: Color(0xFFF59E0B)),
-    (label: 'Declining', count: '157', percent: 70.4, color: Color(0xFFBA1A1A)),
+  List<
+      ({
+        String ticker,
+        String initial,
+        String price,
+        String change,
+        bool isUp,
+        String value,
+        Color logoColor,
+      })> get _activeTurnoverRows =>
+      _turnoverByTab[_turnoverTab]!.rows;
+
+  String get _activeLastColumn => _turnoverByTab[_turnoverTab]!.lastColumn;
+
+  static const _breadthPages = [
+    (
+      subtitle: 'Number OF Stocks',
+      items: [
+        (
+          label: 'Advancing',
+          value: '49',
+          percent: 22.0,
+          color: Color(0xFF1B8A44),
+        ),
+        (
+          label: 'Unchanged',
+          value: '17',
+          percent: 7.6,
+          color: Color(0xFFF59E0B),
+        ),
+        (
+          label: 'Declining',
+          value: '157',
+          percent: 70.4,
+          color: Color(0xFFBA1A1A),
+        ),
+      ],
+    ),
+    (
+      subtitle: 'Turnover',
+      items: [
+        (
+          label: 'Advancing',
+          value: '4.68B',
+          percent: 43.6,
+          color: Color(0xFF1B8A44),
+        ),
+        (
+          label: 'Unchanged',
+          value: '61.87M',
+          percent: 0.6,
+          color: Color(0xFFF59E0B),
+        ),
+        (
+          label: 'Declining',
+          value: '5.98B',
+          percent: 55.8,
+          color: Color(0xFFBA1A1A),
+        ),
+      ],
+    ),
+    (
+      subtitle: 'Volume',
+      items: [
+        (
+          label: 'Advancing',
+          value: '1.18B',
+          percent: 31.8,
+          color: Color(0xFF1B8A44),
+        ),
+        (
+          label: 'Unchanged',
+          value: '33.46M',
+          percent: 0.9,
+          color: Color(0xFFF59E0B),
+        ),
+        (
+          label: 'Declining',
+          value: '2.49B',
+          percent: 67.3,
+          color: Color(0xFFBA1A1A),
+        ),
+      ],
+    ),
   ];
 
   static const _newsCategories = [
@@ -168,7 +403,10 @@ class _MarketTabState extends State<MarketTab> {
                                 setState(() => _turnoverTab = tab),
                           ),
                           const SizedBox(height: _cardInnerGap),
-                          _TurnoverTable(rows: _turnoverRows),
+                          _TurnoverTable(
+                            rows: _activeTurnoverRows,
+                            lastColumnLabel: _activeLastColumn,
+                          ),
                         ],
                       ),
                     ),
@@ -189,21 +427,24 @@ class _MarketTabState extends State<MarketTab> {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            'Number OF Stocks',
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 12,
-                              color: grw.textSecondary,
+                          Center(
+                            child: Text(
+                              _breadthPages[_breadthPage].subtitle,
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 12,
+                                color: grw.textSecondary,
+                              ),
                             ),
                           ),
                           const SizedBox(height: _cardInnerGap),
                           Row(
-                            children: _breadth.map((item) {
+                            children:
+                                _breadthPages[_breadthPage].items.map((item) {
                               return Expanded(
                                 child: _BreadthDonut(
                                   label: item.label,
-                                  count: item.count,
+                                  value: item.value,
                                   percent: item.percent,
                                   color: item.color,
                                 ),
@@ -213,17 +454,23 @@ class _MarketTabState extends State<MarketTab> {
                           const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(3, (i) {
-                              return Container(
-                                width: 6,
-                                height: 6,
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 3),
-                                decoration: BoxDecoration(
-                                  color: i == _breadthPage
-                                      ? GrwColors.primary
-                                      : grw.borderLight,
-                                  shape: BoxShape.circle,
+                            children: List.generate(_breadthPages.length, (i) {
+                              return GestureDetector(
+                                onTap: () =>
+                                    setState(() => _breadthPage = i),
+                                behavior: HitTestBehavior.opaque,
+                                child: Container(
+                                  width: 6,
+                                  height: 6,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: i == _breadthPage
+                                        ? GrwColors.primary
+                                        : grw.borderLight,
+                                    shape: BoxShape.circle,
+                                  ),
                                 ),
                               );
                             }),
@@ -551,7 +798,7 @@ class _TurnoverTabs extends StatelessWidget {
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                     fontSize: 11,
-                    color: isActive ? GrwColors.primary : grw.textSecondary,
+                    color: isActive ? GrwColors.primary : grw.chipInactiveText,
                   ),
                 ),
               ),
@@ -571,26 +818,34 @@ class _TurnoverTable extends StatelessWidget {
         String price,
         String change,
         bool isUp,
-        String turnover,
+        String value,
         Color logoColor,
       })> rows;
+  final String lastColumnLabel;
 
-  const _TurnoverTable({required this.rows});
+  const _TurnoverTable({
+    required this.rows,
+    required this.lastColumnLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
     final grw = context.grw;
+    final headerBg = context.isDarkMode
+        ? const Color(0xFF528DFF).withValues(alpha: 0.1)
+        : const Color(0xFFE8F0FE);
+
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
           decoration: BoxDecoration(
-            color: const Color(0xFF528DFF).withValues(alpha: 0.1),
+            color: headerBg,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Row(
+          child: Row(
             children: [
-              Expanded(
+              const Expanded(
                 flex: 3,
                 child: Text(
                   'Name',
@@ -602,7 +857,7 @@ class _TurnoverTable extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
+              const Expanded(
                 flex: 2,
                 child: Text(
                   'Price',
@@ -615,7 +870,7 @@ class _TurnoverTable extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
+              const Expanded(
                 flex: 2,
                 child: Text(
                   'chg %',
@@ -631,9 +886,9 @@ class _TurnoverTable extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Text(
-                  'Turnover',
+                  lastColumnLabel,
                   textAlign: TextAlign.right,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
@@ -726,7 +981,7 @@ class _TurnoverTable extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: Text(
-                    row.turnover,
+                    row.value,
                     textAlign: TextAlign.right,
                     style: const TextStyle(
                       fontFamily: 'Inter',
@@ -747,13 +1002,13 @@ class _TurnoverTable extends StatelessWidget {
 
 class _BreadthDonut extends StatelessWidget {
   final String label;
-  final String count;
+  final String value;
   final double percent;
   final Color color;
 
   const _BreadthDonut({
     required this.label,
-    required this.count,
+    required this.value,
     required this.percent,
     required this.color,
   });
@@ -762,47 +1017,52 @@ class _BreadthDonut extends StatelessWidget {
   Widget build(BuildContext context) {
     final grw = context.grw;
     final trackColor = grw.borderLight.withValues(alpha: 0.4);
+    final percentLabel = '${percent.toStringAsFixed(1)}%';
 
     return Column(
       children: [
         SizedBox(
           width: 88,
           height: 88,
-          child: PieChart(
-            PieChartData(
-              startDegreeOffset: -90,
-              sectionsSpace: 0,
-              centerSpaceRadius: 30,
-              sections: [
-                PieChartSectionData(
-                  value: percent,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              PieChart(
+                PieChartData(
+                  startDegreeOffset: -90,
+                  sectionsSpace: 0,
+                  centerSpaceRadius: 30,
+                  sections: [
+                    PieChartSectionData(
+                      value: percent,
+                      color: color,
+                      radius: 12,
+                      showTitle: false,
+                    ),
+                    PieChartSectionData(
+                      value: 100 - percent,
+                      color: trackColor,
+                      radius: 12,
+                      showTitle: false,
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                percentLabel,
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 10,
                   color: color,
-                  radius: 12,
-                  showTitle: false,
                 ),
-                PieChartSectionData(
-                  value: 100 - percent,
-                  color: trackColor,
-                  radius: 12,
-                  showTitle: false,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: 6),
         Text(
-          '${percent.toStringAsFixed(1)}%',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w600,
-            fontSize: 11,
-            color: color,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          count,
+          value,
           style: TextStyle(
             fontFamily: 'Inter',
             fontWeight: FontWeight.w700,
