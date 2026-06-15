@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:grw_app/core/theme/grw_colors.dart';
+import 'package:grw_app/features/market/market_data.dart';
 
 class MarketTab extends StatefulWidget {
   const MarketTab({super.key});
@@ -34,7 +35,7 @@ class _MarketTabState extends State<MarketTab> {
   }
 
   void _goBreadthNext() {
-    if (_breadthPage < _breadthPages.length - 1) {
+    if (_breadthPage < MarketDataProvider.breadthPages.length - 1) {
       _breadthPageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -50,314 +51,19 @@ class _MarketTabState extends State<MarketTab> {
     );
   }
 
-  static const _turnoverTabs = ['Turnover', 'Volume', 'Gainers', 'Losers'];
+  List<MarketStock> get _activeTurnoverRows =>
+      MarketDataProvider.turnoverTabByName(_turnoverTab)?.stocks ?? [];
 
-  static const _indices = [
-    (name: 'EGX30', price: '50,818.84', change: '-437.81 (-0.85%)'),
-    (name: 'EGX30CAPPED', price: '62,249.00', change: '-535.12 (-0.85%)'),
-    (name: 'EGX70 EWI', price: '8,412.55', change: '-62.18 (-0.73%)'),
-    (name: 'EGX100 EWI', price: '12,304.10', change: '-98.22 (-0.79%)'),
-  ];
-
-  static const _turnoverByTab = {
-    'Turnover': (
-      lastColumn: 'Turnover',
-      rows: [
-        (
-          ticker: 'PRDC',
-          initial: 'P',
-          price: '6.25',
-          change: '2.63%',
-          isUp: true,
-          value: '1.36B',
-          logoColor: Color(0xFFBA1A1A),
-        ),
-        (
-          ticker: 'KORA',
-          initial: 'K',
-          price: '3.55',
-          change: '19.53%',
-          isUp: true,
-          value: '980.16M',
-          logoColor: Color(0xFF75777D),
-        ),
-        (
-          ticker: 'GDWA',
-          initial: 'G',
-          price: '0.773',
-          change: '-2.15%',
-          isUp: false,
-          value: '911.09M',
-          logoColor: Color(0xFF1B1B1D),
-        ),
-        (
-          ticker: 'CCAP',
-          initial: 'C',
-          price: '5.14',
-          change: '-0.19%',
-          isUp: false,
-          value: '586.17M',
-          logoColor: Color(0xFF0059C7),
-        ),
-        (
-          ticker: 'COMI',
-          initial: 'C',
-          price: '131.69',
-          change: '0.49%',
-          isUp: true,
-          value: '478.14M',
-          logoColor: Color(0xFF0059C7),
-        ),
-      ],
-    ),
-    'Volume': (
-      lastColumn: 'Volume',
-      rows: [
-        (
-          ticker: 'GDWA',
-          initial: 'G',
-          price: '0.773',
-          change: '-2.15%',
-          isUp: false,
-          value: '1.17B',
-          logoColor: Color(0xFF1B1B1D),
-        ),
-        (
-          ticker: 'ARAB',
-          initial: 'A',
-          price: '0.206',
-          change: '1.98%',
-          isUp: true,
-          value: '311.80M',
-          logoColor: Color(0xFF1B8A44),
-        ),
-        (
-          ticker: 'KORA',
-          initial: 'K',
-          price: '3.55',
-          change: '19.53%',
-          isUp: true,
-          value: '270.30M',
-          logoColor: Color(0xFF75777D),
-        ),
-        (
-          ticker: 'PRDC',
-          initial: 'P',
-          price: '6.25',
-          change: '2.63%',
-          isUp: true,
-          value: '225.68M',
-          logoColor: Color(0xFFBA1A1A),
-        ),
-        (
-          ticker: 'ASPI',
-          initial: 'A',
-          price: '0.31',
-          change: '-6.91%',
-          isUp: false,
-          value: '135.01M',
-          logoColor: Color(0xFF45474C),
-        ),
-      ],
-    ),
-    'Gainers': (
-      lastColumn: 'Volume',
-      rows: [
-        (
-          ticker: 'KORA',
-          initial: 'K',
-          price: '3.55',
-          change: '19.53%',
-          isUp: true,
-          value: '270.30M',
-          logoColor: Color(0xFF75777D),
-        ),
-        (
-          ticker: 'TYCN',
-          initial: 'T',
-          price: '21.65',
-          change: '9.62%',
-          isUp: true,
-          value: '48.20M',
-          logoColor: Color(0xFF0059C7),
-        ),
-        (
-          ticker: 'ARVA',
-          initial: 'A',
-          price: '8.44',
-          change: '8.19%',
-          isUp: true,
-          value: '35.10M',
-          logoColor: Color(0xFF1B8A44),
-        ),
-        (
-          ticker: 'ISMQ',
-          initial: 'I',
-          price: '12.30',
-          change: '6.45%',
-          isUp: true,
-          value: '28.90M',
-          logoColor: Color(0xFFBA1A1A),
-        ),
-        (
-          ticker: 'VALU',
-          initial: 'V',
-          price: '5.88',
-          change: '5.12%',
-          isUp: true,
-          value: '22.40M',
-          logoColor: Color(0xFF0059C7),
-        ),
-      ],
-    ),
-    'Losers': (
-      lastColumn: 'Volume',
-      rows: [
-        (
-          ticker: 'ASPI_r3',
-          initial: 'A',
-          price: '0.11',
-          change: '-7.56%',
-          isUp: false,
-          value: '72.01M',
-          logoColor: Color(0xFF45474C),
-        ),
-        (
-          ticker: 'CRST',
-          initial: 'C',
-          price: '1.16',
-          change: '-7.20%',
-          isUp: false,
-          value: '51.12M',
-          logoColor: Color(0xFF1B1B1D),
-        ),
-        (
-          ticker: 'ASPI',
-          initial: 'A',
-          price: '0.31',
-          change: '-6.91%',
-          isUp: false,
-          value: '135.01M',
-          logoColor: Color(0xFF45474C),
-        ),
-        (
-          ticker: 'KASABF',
-          initial: 'K',
-          price: '3.82',
-          change: '-6.14%',
-          isUp: false,
-          value: '1.73M',
-          logoColor: Color(0xFF75777D),
-        ),
-        (
-          ticker: 'COSG',
-          initial: 'C',
-          price: '1.55',
-          change: '-6.06%',
-          isUp: false,
-          value: '41.41M',
-          logoColor: Color(0xFFBA1A1A),
-        ),
-      ],
-    ),
-  };
-
-  List<
-      ({
-        String ticker,
-        String initial,
-        String price,
-        String change,
-        bool isUp,
-        String value,
-        Color logoColor,
-      })> get _activeTurnoverRows =>
-      _turnoverByTab[_turnoverTab]!.rows;
-
-  String get _activeLastColumn => _turnoverByTab[_turnoverTab]!.lastColumn;
-
-  static const _breadthPages = [
-    (
-      subtitle: 'Number OF Stocks',
-      items: [
-        (
-          label: 'Advancing',
-          value: '49',
-          percent: 22.0,
-          color: Color(0xFF1B8A44),
-        ),
-        (
-          label: 'Unchanged',
-          value: '17',
-          percent: 7.6,
-          color: Color(0xFFF59E0B),
-        ),
-        (
-          label: 'Declining',
-          value: '157',
-          percent: 70.4,
-          color: Color(0xFFBA1A1A),
-        ),
-      ],
-    ),
-    (
-      subtitle: 'Turnover',
-      items: [
-        (
-          label: 'Advancing',
-          value: '4.68B',
-          percent: 43.6,
-          color: Color(0xFF1B8A44),
-        ),
-        (
-          label: 'Unchanged',
-          value: '61.87M',
-          percent: 0.6,
-          color: Color(0xFFF59E0B),
-        ),
-        (
-          label: 'Declining',
-          value: '5.98B',
-          percent: 55.8,
-          color: Color(0xFFBA1A1A),
-        ),
-      ],
-    ),
-    (
-      subtitle: 'Volume',
-      items: [
-        (
-          label: 'Advancing',
-          value: '1.18B',
-          percent: 31.8,
-          color: Color(0xFF1B8A44),
-        ),
-        (
-          label: 'Unchanged',
-          value: '33.46M',
-          percent: 0.9,
-          color: Color(0xFFF59E0B),
-        ),
-        (
-          label: 'Declining',
-          value: '2.49B',
-          percent: 67.3,
-          color: Color(0xFFBA1A1A),
-        ),
-      ],
-    ),
-  ];
-
-  static const _newsCategories = [
-    (icon: Icons.swap_horiz, title: 'Block Trades', subtitle: '(EGX)'),
-    (icon: Icons.trending_up, title: 'Special Stock', subtitle: '(EGX)'),
-    (icon: Icons.savings, title: 'Dividends', subtitle: '(EGX)'),
-    (icon: Icons.account_balance, title: 'IPO News', subtitle: '(EGX)'),
-  ];
+  String get _activeLastColumn =>
+      MarketDataProvider.turnoverTabByName(_turnoverTab)?.lastColumnLabel ??
+      'Volume';
 
   @override
   Widget build(BuildContext context) {
     final grw = context.grw;
+    final indices = MarketDataProvider.indices;
+    final breadthPages = MarketDataProvider.breadthPages;
+    final newsCategories = MarketDataProvider.newsCategories;
 
     return ColoredBox(
       color: GrwColors.primary,
@@ -387,13 +93,9 @@ class _MarketTabState extends State<MarketTab> {
                           ),
                           const SizedBox(height: _cardInnerGap),
                           Row(
-                            children: _indices.map((index) {
+                            children: indices.map((index) {
                               return Expanded(
-                                child: _IndexItem(
-                                  name: index.name,
-                                  price: index.price,
-                                  change: index.change,
-                                ),
+                                child: _IndexItem(index: index),
                               );
                             }).toList(),
                           ),
@@ -417,8 +119,8 @@ class _MarketTabState extends State<MarketTab> {
                                   color: grw.textPrimary,
                                 ),
                               ),
-                              const Text(
-                                '10,824.27M',
+                              Text(
+                                MarketDataProvider.totalTurnover,
                                 style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w700,
@@ -430,7 +132,7 @@ class _MarketTabState extends State<MarketTab> {
                           ),
                           const SizedBox(height: _cardInnerGap),
                           _TurnoverTabs(
-                            tabs: _turnoverTabs,
+                            tabs: MarketDataProvider.turnoverTabNames,
                             selected: _turnoverTab,
                             onSelected: (tab) =>
                                 setState(() => _turnoverTab = tab),
@@ -462,7 +164,7 @@ class _MarketTabState extends State<MarketTab> {
                           const SizedBox(height: 4),
                           Center(
                             child: Text(
-                              _breadthPages[_breadthPage].subtitle,
+                              breadthPages[_breadthPage].subtitle,
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 12,
@@ -480,12 +182,13 @@ class _MarketTabState extends State<MarketTab> {
                                   controller: _breadthPageController,
                                   onPageChanged: (index) =>
                                       setState(() => _breadthPage = index),
-                                  itemCount: _breadthPages.length,
+                                  itemCount: breadthPages.length,
                                   itemBuilder: (context, index) {
                                     return Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: _breadthPages[index].items
+                                      children: breadthPages[index]
+                                          .chartItems
                                           .map((item) {
                                         return Expanded(
                                           child: _BreadthDonut(
@@ -518,8 +221,8 @@ class _MarketTabState extends State<MarketTab> {
                                   child: Center(
                                     child: _BreadthNavArrow(
                                       icon: Icons.chevron_right,
-                                      enabled:
-                                          _breadthPage < _breadthPages.length - 1,
+                                      enabled: _breadthPage <
+                                          breadthPages.length - 1,
                                       onTap: _goBreadthNext,
                                     ),
                                   ),
@@ -530,7 +233,7 @@ class _MarketTabState extends State<MarketTab> {
                           const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(_breadthPages.length, (i) {
+                            children: List.generate(breadthPages.length, (i) {
                               return GestureDetector(
                                 onTap: () => _goBreadthPage(i),
                                 behavior: HitTestBehavior.opaque,
@@ -580,7 +283,7 @@ class _MarketTabState extends State<MarketTab> {
                           const SizedBox(height: 20),
                           Center(
                             child: Text(
-                              'No investor classification data available',
+                              MarketDataProvider.investorClassificationMessage,
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 14,
@@ -615,9 +318,7 @@ class _MarketTabState extends State<MarketTab> {
                                 width: cardWidth,
                                 height: cardHeight,
                                 child: _NewsCategoryCard(
-                                  icon: _newsCategories[left].icon,
-                                  title: _newsCategories[left].title,
-                                  subtitle: _newsCategories[left].subtitle,
+                                  category: newsCategories[left],
                                 ),
                               ),
                               const SizedBox(width: spacing),
@@ -625,9 +326,7 @@ class _MarketTabState extends State<MarketTab> {
                                 width: cardWidth,
                                 height: cardHeight,
                                 child: _NewsCategoryCard(
-                                  icon: _newsCategories[right].icon,
-                                  title: _newsCategories[right].title,
-                                  subtitle: _newsCategories[right].subtitle,
+                                  category: newsCategories[right],
                                 ),
                               ),
                             ],
@@ -761,15 +460,9 @@ class _SectionHeader extends StatelessWidget {
 }
 
 class _IndexItem extends StatelessWidget {
-  final String name;
-  final String price;
-  final String change;
+  final MarketIndex index;
 
-  const _IndexItem({
-    required this.name,
-    required this.price,
-    required this.change,
-  });
+  const _IndexItem({required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -786,7 +479,7 @@ class _IndexItem extends StatelessWidget {
           alignment: Alignment.center,
           padding: const EdgeInsets.all(6),
           child: Text(
-            name,
+            index.name,
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -801,7 +494,7 @@ class _IndexItem extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          price,
+          index.price,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: 'Inter',
@@ -812,7 +505,7 @@ class _IndexItem extends StatelessWidget {
         ),
         const SizedBox(height: 2),
         Text(
-          change,
+          index.formattedChange,
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontFamily: 'Inter',
@@ -886,16 +579,7 @@ class _TurnoverTabs extends StatelessWidget {
 }
 
 class _TurnoverTable extends StatelessWidget {
-  final List<
-      ({
-        String ticker,
-        String initial,
-        String price,
-        String change,
-        bool isUp,
-        String value,
-        Color logoColor,
-      })> rows;
+  final List<MarketStock> rows;
   final String lastColumnLabel;
 
   const _TurnoverTable({
@@ -974,9 +658,9 @@ class _TurnoverTable extends StatelessWidget {
             ],
           ),
         ),
-        ...rows.map((row) {
+        ...rows.map((stock) {
           final changeColor =
-              row.isUp ? GrwColors.gain : grw.lossAmount;
+              stock.isUp ? GrwColors.gain : grw.lossAmount;
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
             decoration: BoxDecoration(
@@ -992,12 +676,12 @@ class _TurnoverTable extends StatelessWidget {
                         width: 28,
                         height: 28,
                         decoration: BoxDecoration(
-                          color: row.logoColor,
+                          color: stock.color,
                           shape: BoxShape.circle,
                         ),
                         alignment: Alignment.center,
                         child: Text(
-                          row.initial,
+                          stock.initial,
                           style: const TextStyle(
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w700,
@@ -1008,7 +692,7 @@ class _TurnoverTable extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        row.ticker,
+                        stock.symbol,
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w600,
@@ -1025,7 +709,7 @@ class _TurnoverTable extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        row.price,
+                        stock.price,
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 12,
@@ -1033,7 +717,9 @@ class _TurnoverTable extends StatelessWidget {
                         ),
                       ),
                       Icon(
-                        row.isUp ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                        stock.isUp
+                            ? Icons.arrow_drop_up
+                            : Icons.arrow_drop_down,
                         size: 16,
                         color: changeColor,
                       ),
@@ -1043,7 +729,7 @@ class _TurnoverTable extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: Text(
-                    row.change,
+                    stock.formattedChangePercent,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Inter',
@@ -1056,7 +742,7 @@ class _TurnoverTable extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: Text(
-                    row.value,
+                    stock.volume,
                     textAlign: TextAlign.right,
                     style: const TextStyle(
                       fontFamily: 'Inter',
@@ -1287,15 +973,9 @@ class _ToggleChip extends StatelessWidget {
 }
 
 class _NewsCategoryCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
+  final MarketNewsCategory category;
 
-  const _NewsCategoryCard({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-  });
+  const _NewsCategoryCard({required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -1330,14 +1010,14 @@ class _NewsCategoryCard extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              icon,
+              category.icon,
               size: 20,
               color: GrwColors.primary,
             ),
           ),
           const SizedBox(height: 10),
           Text(
-            title,
+            category.title,
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -1351,7 +1031,7 @@ class _NewsCategoryCard extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            subtitle,
+            category.subtitle,
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 11,
