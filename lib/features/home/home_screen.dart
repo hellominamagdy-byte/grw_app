@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:grw_app/core/theme/grw_colors.dart';
 import 'package:grw_app/features/explore/explore_screen.dart';
 import 'package:grw_app/features/home/my_hub_screen.dart';
 import 'package:grw_app/features/news/news_data.dart';
@@ -24,8 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FB),
+      backgroundColor: grw.background,
       extendBody: true,
       body: IndexedStack(
         index: _currentIndex,
@@ -64,16 +66,17 @@ class _BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.9),
+            color: grw.navBar,
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF0A1628).withValues(alpha: 0.05),
+                color: grw.cardShadow,
                 blurRadius: 20,
                 offset: const Offset(0, -4),
               ),
@@ -100,8 +103,7 @@ class _BottomNav extends StatelessWidget {
                               horizontal: 4, vertical: 4),
                       decoration: active
                           ? BoxDecoration(
-                              color: const Color(0xFF528DFF)
-                                  .withValues(alpha: 0.1),
+                              color: grw.navActiveBg,
                               borderRadius: BorderRadius.circular(999),
                             )
                           : null,
@@ -111,8 +113,8 @@ class _BottomNav extends StatelessWidget {
                           Icon(
                             active ? activeIcon : icon,
                             color: active
-                                ? const Color(0xFF0059C7)
-                                : const Color(0xFF45474C),
+                                ? grw.primaryAction
+                                : grw.navInactive,
                             size: 20,
                           ),
                           const SizedBox(height: 4),
@@ -123,8 +125,8 @@ class _BottomNav extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                               fontSize: 12,
                               color: active
-                                  ? const Color(0xFF0059C7)
-                                  : const Color(0xFF45474C),
+                                  ? grw.primaryAction
+                                  : grw.navInactive,
                               letterSpacing: 0.6,
                             ),
                           ),
@@ -175,6 +177,7 @@ class _HomeTab extends StatelessWidget {
 class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     final now = DateTime.now();
     final dateStr = DateFormat('EEE, MMM d, y').format(now);
 
@@ -182,7 +185,7 @@ class _TopBar extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
-          color: const Color(0xFFFBF8FA).withValues(alpha: 0.8),
+          color: grw.headerBar.withValues(alpha: 0.8),
           padding: EdgeInsets.only(
             top: MediaQuery.of(context).padding.top + 8,
             bottom: 16,
@@ -218,23 +221,23 @@ class _TopBar extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Hi, Mina!',
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
-                          color: Colors.black,
+                          color: grw.textPrimary,
                           height: 1.25,
                         ),
                       ),
                       Text(
                         dateStr,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Color(0xFF45474C),
+                          color: grw.textSecondary,
                         ),
                       ),
                     ],
@@ -249,11 +252,11 @@ class _TopBar extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 13, vertical: 5),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: grw.card,
                       borderRadius: BorderRadius.circular(999),
-                      border: Border.all(color: const Color(0xFFC5C6CD)),
+                      border: Border.all(color: grw.borderLight),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Text(
                           'EGP',
@@ -261,13 +264,13 @@ class _TopBar extends StatelessWidget {
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w500,
                             fontSize: 12,
-                            color: Colors.black,
+                            color: grw.textPrimary,
                             letterSpacing: 0.6,
                           ),
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Icon(Icons.keyboard_arrow_down,
-                            size: 14, color: Colors.black54),
+                            size: 14, color: grw.textSecondary),
                       ],
                     ),
                   ),
@@ -278,7 +281,7 @@ class _TopBar extends StatelessWidget {
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w700,
                       fontSize: 24,
-                      color: Color(0xFF0059C7),
+                      color: GrwColors.primary,
                     ),
                   ),
                 ],
@@ -296,19 +299,20 @@ class _TopBar extends StatelessWidget {
 class _PortfolioCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF0059C7), Color(0xFF004398)],
+        gradient: LinearGradient(
+          colors: [grw.balanceGradientStart, grw.balanceGradientEnd],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0059C7).withValues(alpha: 0.2),
+            color: grw.balanceGradientStart.withValues(alpha: 0.2),
             blurRadius: 30,
             offset: const Offset(0, 8),
           ),
@@ -492,6 +496,7 @@ class _DailyNewsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final grw = context.grw;
     final viewedIds = ref.watch(storyViewedProvider);
 
     return Column(
@@ -499,7 +504,7 @@ class _DailyNewsSection extends ConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -508,7 +513,7 @@ class _DailyNewsSection extends ConsumerWidget {
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                     fontSize: 20,
-                    color: Colors.black,
+                    color: grw.textPrimary,
                     height: 1.4,
                   ),
                 ),
@@ -517,7 +522,7 @@ class _DailyNewsSection extends ConsumerWidget {
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 14,
-                    color: Color(0xFF45474C),
+                    color: grw.textSecondary,
                   ),
                 ),
               ],
@@ -531,7 +536,7 @@ class _DailyNewsSection extends ConsumerWidget {
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w500,
                   fontSize: 12,
-                  color: Color(0xFF0059C7),
+                  color: GrwColors.primary,
                   letterSpacing: 0.6,
                 ),
               ),
@@ -598,28 +603,29 @@ class _MyInvestmentsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             Text(
               'My Investments',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
                 fontSize: 20,
-                color: Colors.black,
+                color: grw.textPrimary,
                 height: 1.4,
               ),
             ),
-            Text(
+            const Text(
               'See All',
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w500,
                 fontSize: 12,
-                color: Color(0xFF0059C7),
+                color: GrwColors.primary,
                 letterSpacing: 0.6,
               ),
             ),
@@ -664,16 +670,17 @@ class _InvestmentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(17),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.8),
+        color: grw.investmentCard,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: grw.border),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0A1628).withValues(alpha: 0.05),
+            color: grw.cardShadow,
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -709,20 +716,20 @@ class _InvestmentItem extends StatelessWidget {
                 children: [
                   Text(
                     name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
-                      color: Colors.black,
+                      color: grw.textPrimary,
                       height: 1.25,
                     ),
                   ),
                   Text(
                     subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 12,
-                      color: Color(0xFF45474C),
+                      color: grw.textSecondary,
                       height: 2,
                     ),
                   ),
@@ -735,10 +742,10 @@ class _InvestmentItem extends StatelessWidget {
             children: [
               Text(
                 price,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 16,
-                  color: Colors.black,
+                  color: grw.textPrimary,
                   height: 1.5,
                 ),
               ),
@@ -748,8 +755,8 @@ class _InvestmentItem extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 decoration: BoxDecoration(
                   color: isLoss
-                      ? const Color(0xFFBA1A1A).withValues(alpha: 0.1)
-                      : const Color(0xFF1B8A44).withValues(alpha: 0.1),
+                      ? grw.lossAmount.withValues(alpha: 0.1)
+                      : grw.gainBadgeText.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Row(
@@ -757,9 +764,7 @@ class _InvestmentItem extends StatelessWidget {
                     Icon(
                       isLoss ? Icons.arrow_downward : Icons.arrow_upward,
                       size: 8,
-                      color: isLoss
-                          ? const Color(0xFFBA1A1A)
-                          : const Color(0xFF1B8A44),
+                      color: isLoss ? grw.lossAmount : grw.gainBadgeText,
                     ),
                     const SizedBox(width: 2),
                     Text(
@@ -767,9 +772,7 @@ class _InvestmentItem extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 10,
-                        color: isLoss
-                            ? const Color(0xFFBA1A1A)
-                            : const Color(0xFF1B8A44),
+                        color: isLoss ? grw.lossAmount : grw.gainBadgeText,
                       ),
                     ),
                   ],
@@ -793,18 +796,19 @@ class _PlaceholderTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 48, color: const Color(0xFF0059C7)),
+          Icon(icon, size: 48, color: GrwColors.primary),
           const SizedBox(height: 16),
           Text(
             '$name — Coming Soon',
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 18,
-              color: Color(0xFF45474C),
+              color: grw.textSecondary,
             ),
           ),
         ],

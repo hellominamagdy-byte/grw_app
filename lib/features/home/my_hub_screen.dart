@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:grw_app/core/theme/grw_colors.dart';
+import 'package:grw_app/features/home/my_account_sheet.dart';
 
 class MyHubTab extends StatelessWidget {
   const MyHubTab({super.key});
@@ -24,8 +26,10 @@ class MyHubTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
+
     return ColoredBox(
-      color: const Color(0xFFF8FAFF),
+      color: grw.backgroundAlt,
       child: Column(
         children: [
           const _MyHubHeader(),
@@ -87,6 +91,9 @@ class MyHubTab extends StatelessWidget {
                               child: _QuickAccessCard(
                                 label: q.label,
                                 icon: q.icon,
+                                onTap: q.label == 'My Account'
+                                    ? () => showMyAccountSheet(context)
+                                    : null,
                               ),
                             );
                           }).toList(),
@@ -231,18 +238,19 @@ class _SectionBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Inter',
             fontWeight: FontWeight.w700,
             fontSize: 13,
             height: 1.5,
             letterSpacing: 0.65,
-            color: Color(0xFF8AACC8),
+            color: grw.sectionLabel,
           ),
         ),
         const SizedBox(height: 12),
@@ -260,15 +268,16 @@ class _ServiceRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Container(
       height: 68,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: grw.card,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0A1628).withValues(alpha: 0.04),
+            color: grw.cardShadow,
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -280,29 +289,25 @@ class _ServiceRow extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: const Color(0xFF528DFF).withValues(alpha: 0.1),
+              color: grw.iconCircleBg,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, size: 18, color: const Color(0xFF0059C7)),
+            child: Icon(icon, size: 18, color: GrwColors.primary),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
                 fontSize: 15,
                 height: 1.5,
-                color: Color(0xFF1B1B1D),
+                color: grw.textPrimary,
               ),
             ),
           ),
-          const Icon(
-            Icons.chevron_right,
-            size: 12,
-            color: Color(0xFFC5C6CD),
-          ),
+          Icon(Icons.chevron_right, size: 12, color: grw.borderLight),
         ],
       ),
     );
@@ -317,15 +322,16 @@ class _MarketFeedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Container(
       width: 111,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: grw.card,
         borderRadius: BorderRadius.circular(11),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0A1628).withValues(alpha: 0.04),
+            color: grw.cardShadow,
             blurRadius: 7,
           ),
         ],
@@ -337,10 +343,10 @@ class _MarketFeedCard extends StatelessWidget {
             width: 30,
             height: 30,
             decoration: BoxDecoration(
-              color: const Color(0xFF528DFF).withValues(alpha: 0.1),
+              color: grw.iconCircleBg,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, size: 14, color: const Color(0xFF0059C7)),
+            child: Icon(icon, size: 14, color: GrwColors.primary),
           ),
           const SizedBox(height: 11),
           Text(
@@ -348,12 +354,12 @@ class _MarketFeedCard extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
               fontSize: 11,
               height: 1.5,
-              color: Color(0xFF1B1B1D),
+              color: grw.textPrimary,
             ),
           ),
         ],
@@ -365,49 +371,59 @@ class _MarketFeedCard extends StatelessWidget {
 class _QuickAccessCard extends StatelessWidget {
   final String label;
   final IconData icon;
+  final VoidCallback? onTap;
 
-  const _QuickAccessCard({required this.label, required this.icon});
+  const _QuickAccessCard({
+    required this.label,
+    required this.icon,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF0A1628).withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: const Color(0xFF528DFF).withValues(alpha: 0.1),
-              shape: BoxShape.circle,
+    final grw = context.grw;
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: grw.card,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: grw.cardShadow,
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
-            child: Icon(icon, size: 14, color: const Color(0xFF0059C7)),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-                height: 1.25,
-                color: Color(0xFF1B1B1D),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: grw.iconCircleBg,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, size: 14, color: GrwColors.primary),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  height: 1.25,
+                  color: grw.textPrimary,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

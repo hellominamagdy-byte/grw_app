@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:grw_app/core/theme/grw_colors.dart';
 import 'package:grw_app/features/news/news_data.dart';
 
 class NewsListScreen extends StatefulWidget {
@@ -15,8 +16,6 @@ class NewsListScreen extends StatefulWidget {
 }
 
 class _NewsListScreenState extends State<NewsListScreen> {
-  static const _backgroundColor = Color(0xFFF8F9FB);
-
   late String _selectedCategory;
   bool _showAllLatest = false;
 
@@ -34,7 +33,7 @@ class _NewsListScreenState extends State<NewsListScreen> {
         : NewsData.latestForCategory(_selectedCategory);
 
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: context.grw.background,
       body: Column(
         children: [
           _NewsListHeader(onBack: () => context.pop()),
@@ -88,11 +87,12 @@ class _NewsListHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return ClipRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
         child: Container(
-          color: const Color(0xFFFBF8FA).withValues(alpha: 0.8),
+          color: grw.headerBar.withValues(alpha: 0.8),
           padding: EdgeInsets.fromLTRB(
             8,
             MediaQuery.of(context).padding.top + 8,
@@ -105,17 +105,17 @@ class _NewsListHeader extends StatelessWidget {
                 onPressed: onBack,
                 padding: const EdgeInsets.all(4),
                 constraints: const BoxConstraints(),
-                icon: const Icon(Icons.arrow_back, color: Color(0xFF45474C), size: 20),
+                icon: const Icon(Icons.arrow_back, color: GrwColors.primary, size: 20),
               ),
               const SizedBox(width: 8),
-              const Text(
+              Text(
                 'News',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w700,
                   fontSize: 20,
                   height: 1.4,
-                  color: Colors.black,
+                  color: grw.textPrimary,
                 ),
               ),
               const Spacer(),
@@ -123,14 +123,14 @@ class _NewsListHeader extends StatelessWidget {
                 onPressed: () {},
                 padding: const EdgeInsets.all(4),
                 constraints: const BoxConstraints(),
-                icon: const Icon(Icons.bookmark_border, color: Color(0xFF45474C), size: 20),
+                icon: Icon(Icons.bookmark_border, color: grw.textSecondary, size: 20),
               ),
               const SizedBox(width: 12),
               IconButton(
                 onPressed: () {},
                 padding: const EdgeInsets.all(4),
                 constraints: const BoxConstraints(),
-                icon: const Icon(Icons.info_outline, color: Color(0xFF45474C), size: 20),
+                icon: Icon(Icons.info_outline, color: grw.textSecondary, size: 20),
               ),
             ],
           ),
@@ -156,6 +156,7 @@ class _CategoryChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return SizedBox(
       height: 50,
       child: ListView.separated(
@@ -173,11 +174,11 @@ class _CategoryChips extends StatelessWidget {
                 vertical: isActive ? 5 : 4,
               ),
               decoration: BoxDecoration(
-                color: isActive ? const Color(0xFF0059C7) : Colors.transparent,
+                color: isActive ? GrwColors.primary : Colors.transparent,
                 borderRadius: BorderRadius.circular(999),
                 border: isActive
                     ? null
-                    : Border.all(color: const Color(0xFFC5C6CD)),
+                    : Border.all(color: grw.chipBorder),
               ),
               child: Center(
                 child: Text(
@@ -188,7 +189,7 @@ class _CategoryChips extends StatelessWidget {
                     fontSize: 12,
                     height: 1.33,
                     letterSpacing: 0.6,
-                    color: isActive ? Colors.white : const Color(0xFF45474C),
+                    color: isActive ? Colors.white : grw.textSecondary,
                   ),
                 ),
               ),
@@ -349,20 +350,21 @@ class _LatestNewsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Padding(
       padding: const EdgeInsets.only(top: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          const Text(
+          Text(
             'Latest News',
             style: TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.w700,
               fontSize: 20,
               height: 1.4,
-              color: Colors.black,
+              color: grw.textPrimary,
             ),
           ),
           GestureDetector(
@@ -399,17 +401,16 @@ class _LatestNewsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: grw.card,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFC5C6CD).withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: grw.border),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0A1628).withValues(alpha: 0.05),
+            color: grw.cardShadow,
             blurRadius: 20,
           ),
         ],
@@ -445,29 +446,29 @@ class _LatestNewsItem extends StatelessWidget {
                   article.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                     height: 1.43,
-                    color: Color(0xFF1B1B1D),
+                    color: grw.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '${article.source} • ${article.date}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 10,
                     height: 1.5,
-                    color: Color(0xFF45474C),
+                    color: grw.textSecondary,
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 4),
-          const Icon(Icons.bookmark_border, size: 16, color: Color(0xFF75777D)),
+          Icon(Icons.bookmark_border, size: 16, color: grw.textSecondary),
         ],
       ),
     );

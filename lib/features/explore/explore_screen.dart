@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:grw_app/core/theme/grw_colors.dart';
 
 class ExploreTab extends StatefulWidget {
   const ExploreTab({super.key});
@@ -30,7 +31,7 @@ class _ExploreTabState extends State<ExploreTab> {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: const Color(0xFFF8FAFF),
+      color: context.grw.backgroundAlt,
       child: SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: 100),
         child: Column(
@@ -147,6 +148,7 @@ class _ExploreHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -215,19 +217,19 @@ class _ExploreHeader extends StatelessWidget {
             height: 44,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: const Color(0xFFF0F5FD),
+              color: grw.searchField,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
-              children: const [
-                Icon(Icons.search, size: 15, color: Color(0xFF8AACC8)),
-                SizedBox(width: 8),
+              children: [
+                Icon(Icons.search, size: 15, color: grw.textHint),
+                const SizedBox(width: 8),
                 Text(
                   'Search stocks, funds...',
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 14,
-                    color: Color(0xFF8AACC8),
+                    color: grw.textHint,
                   ),
                 ),
               ],
@@ -298,12 +300,13 @@ class _AdBannerState extends State<_AdBanner> {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Container(
       height: _bannerHeight,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: grw.card,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFCBE2EF)),
+        border: Border.all(color: grw.border),
       ),
       child: Stack(
         fit: StackFit.expand,
@@ -316,7 +319,7 @@ class _AdBannerState extends State<_AdBanner> {
               onPageChanged: (index) => setState(() => _currentIndex = index),
               itemBuilder: (context, index) {
                 return ColoredBox(
-                  color: Colors.white,
+                  color: grw.card,
                   child: Image.asset(
                     _adAsset,
                     width: double.infinity,
@@ -379,8 +382,8 @@ class _AdBannerState extends State<_AdBanner> {
                   margin: const EdgeInsets.symmetric(horizontal: 2),
                   decoration: BoxDecoration(
                     color: i == _currentIndex
-                        ? const Color(0xFF0059C7)
-                        : const Color(0xFFC5C6CD),
+                        ? GrwColors.primary
+                        : grw.borderLight,
                     shape: BoxShape.circle,
                   ),
                 );
@@ -448,15 +451,16 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Text(
       text,
-      style: const TextStyle(
+      style: TextStyle(
         fontFamily: 'Inter',
         fontWeight: FontWeight.w700,
         fontSize: 11,
         height: 1.5,
         letterSpacing: 2,
-        color: Color(0xFF8AACC8),
+        color: grw.sectionLabel,
       ),
     );
   }
@@ -470,16 +474,17 @@ class _ExploreListRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Container(
       height: 68,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: grw.card,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: grw.border),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0A1628).withValues(alpha: 0.05),
+            color: grw.cardShadow,
             blurRadius: 20,
           ),
         ],
@@ -489,30 +494,26 @@ class _ExploreListRow extends StatelessWidget {
           Container(
             width: 40,
             height: 40,
-            decoration: const BoxDecoration(
-              color: Color(0xFFD9E2FF),
+            decoration: BoxDecoration(
+              color: grw.iconCircleBg,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, size: 18, color: const Color(0xFF0059C7)),
+            child: Icon(icon, size: 18, color: GrwColors.primary),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
                 fontSize: 15,
                 height: 1.5,
-                color: Color(0xFF0A1628),
+                color: grw.textPrimary,
               ),
             ),
           ),
-          const Icon(
-            Icons.chevron_right,
-            size: 12,
-            color: Color(0xFFC5C6CD),
-          ),
+          Icon(Icons.chevron_right, size: 12, color: grw.borderLight),
         ],
       ),
     );
@@ -534,16 +535,17 @@ class _GainerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Container(
       width: 120,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: grw.card,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: grw.border),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0A1628).withValues(alpha: 0.05),
+            color: grw.cardShadow,
             blurRadius: 20,
           ),
         ],
@@ -555,8 +557,8 @@ class _GainerCard extends StatelessWidget {
           Container(
             width: 32,
             height: 32,
-            decoration: const BoxDecoration(
-              color: Color(0xFFF0F5FD),
+            decoration: BoxDecoration(
+              color: grw.searchField,
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -567,31 +569,31 @@ class _GainerCard extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   fontSize: 12,
                   height: 1.5,
-                  color: Color(0xFF0059C7),
+                  color: GrwColors.primary,
                 ),
               ),
             ),
           ),
           Text(
             name,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.w700,
               fontSize: 14,
               height: 1.5,
-              color: Color(0xFF0A1628),
+              color: grw.textPrimary,
             ),
           ),
           Row(
             children: [
               Text(
                 price,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
                   fontSize: 12,
                   height: 1.5,
-                  color: Color(0xFF45474C),
+                  color: grw.textSecondary,
                 ),
               ),
               const SizedBox(width: 4),
@@ -633,15 +635,16 @@ class _MarketMapCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: grw.card,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(color: grw.border),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0A1628).withValues(alpha: 0.05),
+            color: grw.cardShadow,
             blurRadius: 20,
           ),
         ],
@@ -651,23 +654,23 @@ class _MarketMapCard extends StatelessWidget {
         children: [
           Text(
             name,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.w700,
               fontSize: 14,
               height: 1.5,
-              color: Color(0xFF0A1628),
+              color: grw.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
               fontSize: 16,
               height: 1.5,
-              color: Color(0xFF45474C),
+              color: grw.textSecondary,
             ),
           ),
           const SizedBox(height: 4),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grw_app/core/theme/grw_colors.dart';
 
 class WalletTab extends StatefulWidget {
   const WalletTab({super.key});
@@ -48,32 +49,36 @@ class _WalletTabState extends State<WalletTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const _WalletHeader(),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 100),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _WalletBalanceCard(
-                  balanceVisible: _balanceVisible,
-                  onToggleVisibility: () =>
-                      setState(() => _balanceVisible = !_balanceVisible),
-                ),
-                _RecentActivitiesSection(
-                  filters: _filters,
-                  activeFilter: _activeFilter,
-                  onFilterChanged: (filter) =>
-                      setState(() => _activeFilter = filter),
-                  transactions: _transactions,
-                ),
-              ],
+    final grw = context.grw;
+    return ColoredBox(
+      color: grw.background,
+      child: Column(
+        children: [
+          const _WalletHeader(),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 100),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _WalletBalanceCard(
+                    balanceVisible: _balanceVisible,
+                    onToggleVisibility: () =>
+                        setState(() => _balanceVisible = !_balanceVisible),
+                  ),
+                  _RecentActivitiesSection(
+                    filters: _filters,
+                    activeFilter: _activeFilter,
+                    onFilterChanged: (filter) =>
+                        setState(() => _activeFilter = filter),
+                    transactions: _transactions,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -85,8 +90,9 @@ class _WalletHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Container(
-      color: const Color(0xFFFBF8FA),
+      color: grw.headerBar,
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top + 16,
         bottom: 16,
@@ -96,27 +102,27 @@ class _WalletHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             'Wallet',
             style: TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
               fontSize: 20,
-              color: Color(0xFF1B1B1D),
+              color: grw.textPrimary,
               height: 1.4,
             ),
           ),
           Container(
             width: 32,
             height: 32,
-            decoration: const BoxDecoration(
-              color: Color(0xFFE4E2E3),
+            decoration: BoxDecoration(
+              color: grw.avatarBg,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.person,
               size: 18,
-              color: Color(0xFF45474C),
+              color: grw.textSecondary,
             ),
           ),
         ],
@@ -138,21 +144,22 @@ class _WalletBalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF0059C7), Color(0xFF004398)],
+          gradient: LinearGradient(
+            colors: [grw.balanceGradientStart, grw.balanceGradientEnd],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF0059C7).withValues(alpha: 0.2),
+              color: grw.balanceGradientStart.withValues(alpha: 0.2),
               blurRadius: 30,
               offset: const Offset(0, 8),
             ),
@@ -333,6 +340,7 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -355,14 +363,14 @@ class _ActionButton extends StatelessWidget {
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
-                color: outlined ? Colors.white : const Color(0xFF0059C7),
+                color: outlined ? Colors.white : grw.primaryAction,
               ),
             ),
             const SizedBox(width: 8),
             Icon(
               icon,
               size: 12,
-              color: outlined ? Colors.white : const Color(0xFF0059C7),
+              color: outlined ? Colors.white : grw.primaryAction,
             ),
           ],
         ),
@@ -394,83 +402,75 @@ class _RecentActivitiesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'Recent Activities',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-              color: Color(0xFF1B1B1D),
-              height: 1.4,
+    final grw = context.grw;
+    return ColoredBox(
+      color: grw.activitiesSurface,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'Recent Activities',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: grw.textPrimary,
+                height: 1.4,
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 12),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-          child: Row(
-            children: filters.map((filter) {
-              final isActive = filter == activeFilter;
-              return Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: GestureDetector(
-                  onTap: () => onFilterChanged(filter),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: isActive
-                          ? const Color(0xFF0059C7)
-                          : Colors.transparent,
-                      border: isActive
-                          ? null
-                          : Border.all(
-                              color: const Color(0xFFC5C6CD)
-                                  .withValues(alpha: 0.3),
-                            ),
-                      borderRadius: BorderRadius.circular(999),
-                      boxShadow: isActive
-                          ? [
-                              BoxShadow(
-                                color: const Color(0xFF0A1628)
-                                    .withValues(alpha: 0.05),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ]
-                          : null,
-                    ),
-                    child: Text(
-                      filter,
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 14,
+          const SizedBox(height: 12),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: Row(
+              children: filters.map((filter) {
+                final isActive = filter == activeFilter;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: GestureDetector(
+                    onTap: () => onFilterChanged(filter),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 6),
+                      decoration: BoxDecoration(
                         color: isActive
-                            ? Colors.white
-                            : const Color(0xFF45474C),
+                            ? grw.primaryAction
+                            : Colors.transparent,
+                        border: isActive
+                            ? null
+                            : Border.all(color: grw.chipBorder),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Text(
+                        filter,
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14,
+                          color: isActive
+                              ? Colors.white
+                              : grw.chipInactiveText,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            }).toList(),
+                );
+              }).toList(),
+            ),
           ),
-        ),
-        ...transactions.map(
-          (tx) => _TransactionItem(
-            type: tx.type,
-            date: tx.date,
-            amount: tx.amount,
-            status: tx.status,
+          ...transactions.map(
+            (tx) => _TransactionItem(
+              type: tx.type,
+              date: tx.date,
+              amount: tx.amount,
+              status: tx.status,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -490,13 +490,12 @@ class _TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grw = context.grw;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: Color(0x1AC5C6CD),
-          ),
+          bottom: BorderSide(color: grw.border),
         ),
       ),
       child: Row(
@@ -508,13 +507,13 @@ class _TransactionItem extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFDAD6).withValues(alpha: 0.3),
+                  color: grw.lossIconBg,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.arrow_downward,
                   size: 18,
-                  color: Color(0xFFBA1A1A),
+                  color: grw.lossAmount,
                 ),
               ),
               const SizedBox(width: 12),
@@ -523,19 +522,19 @@ class _TransactionItem extends StatelessWidget {
                 children: [
                   Text(
                     type,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
-                      color: Color(0xFF1B1B1D),
+                      color: grw.textPrimary,
                     ),
                   ),
                   Text(
                     date,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 12,
-                      color: Color(0xFF45474C),
+                      color: grw.textSecondary,
                     ),
                   ),
                 ],
@@ -547,11 +546,11 @@ class _TransactionItem extends StatelessWidget {
             children: [
               Text(
                 amount,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
-                  color: Color(0xFFBA1A1A),
+                  color: grw.lossAmount,
                 ),
               ),
               const SizedBox(height: 2),
@@ -559,15 +558,15 @@ class _TransactionItem extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFECFDF5),
+                  color: grw.gainBadgeBg,
                   borderRadius: BorderRadius.circular(2),
                 ),
                 child: Text(
                   status,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 12,
-                    color: Color(0xFF059669),
+                    color: grw.gainBadgeText,
                   ),
                 ),
               ),
