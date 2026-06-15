@@ -81,10 +81,10 @@ class _MarketTabState extends State<MarketTab> {
   ];
 
   static const _newsCategories = [
-    (icon: Icons.currency_exchange, title: 'Block Trades', subtitle: '(EGX)'),
-    (icon: Icons.show_chart_outlined, title: 'Special Stock', subtitle: '(EGX)'),
-    (icon: Icons.savings_outlined, title: 'Dividends', subtitle: '(EGX)'),
-    (icon: Icons.account_balance_outlined, title: 'IPO News', subtitle: '(EGX)'),
+    (icon: Icons.swap_horiz, title: 'Block Trades', subtitle: '(EGX)'),
+    (icon: Icons.trending_up, title: 'Special Stock', subtitle: '(EGX)'),
+    (icon: Icons.savings, title: 'Dividends', subtitle: '(EGX)'),
+    (icon: Icons.account_balance, title: 'IPO News', subtitle: '(EGX)'),
   ];
 
   @override
@@ -280,23 +280,44 @@ class _MarketTabState extends State<MarketTab> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 1.05,
-                      ),
-                      itemCount: _newsCategories.length,
-                      itemBuilder: (context, index) {
-                        final item = _newsCategories[index];
-                        return _NewsCategoryCard(
-                          icon: item.icon,
-                          title: item.title,
-                          subtitle: item.subtitle,
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        const spacing = 12.0;
+                        const cardHeight = 112.0;
+                        final cardWidth = (constraints.maxWidth - spacing) / 2;
+
+                        Widget row(int left, int right) {
+                          return Row(
+                            children: [
+                              SizedBox(
+                                width: cardWidth,
+                                height: cardHeight,
+                                child: _NewsCategoryCard(
+                                  icon: _newsCategories[left].icon,
+                                  title: _newsCategories[left].title,
+                                  subtitle: _newsCategories[left].subtitle,
+                                ),
+                              ),
+                              const SizedBox(width: spacing),
+                              SizedBox(
+                                width: cardWidth,
+                                height: cardHeight,
+                                child: _NewsCategoryCard(
+                                  icon: _newsCategories[right].icon,
+                                  title: _newsCategories[right].title,
+                                  subtitle: _newsCategories[right].subtitle,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+
+                        return Column(
+                          children: [
+                            row(0, 1),
+                            const SizedBox(height: spacing),
+                            row(2, 3),
+                          ],
                         );
                       },
                     ),
@@ -899,8 +920,14 @@ class _NewsCategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final grw = context.grw;
+    final iconBg = context.isDarkMode
+        ? grw.iconCircleBg
+        : const Color(0xFFE8F0FE);
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      width: double.infinity,
+      height: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
         color: grw.card,
         borderRadius: BorderRadius.circular(16),
@@ -915,10 +942,18 @@ class _NewsCategoryCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 32,
-            color: grw.textPrimary,
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: iconBg,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color: GrwColors.primary,
+            ),
           ),
           const SizedBox(height: 10),
           Text(
