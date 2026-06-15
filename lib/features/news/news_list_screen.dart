@@ -6,28 +6,41 @@ import 'package:go_router/go_router.dart';
 import 'package:grw_app/features/news/news_data.dart';
 
 class NewsListScreen extends StatefulWidget {
-  const NewsListScreen({super.key});
+  final String? initialCategory;
+
+  const NewsListScreen({super.key, this.initialCategory});
 
   @override
   State<NewsListScreen> createState() => _NewsListScreenState();
 }
 
 class _NewsListScreenState extends State<NewsListScreen> {
-  String _selectedCategory = 'Macroeconomic';
+  static const _backgroundColor = Color(0xFFF8F9FB);
+
+  late String _selectedCategory;
+  bool _showAllLatest = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategory = widget.initialCategory ?? 'Macroeconomic';
+  }
 
   @override
   Widget build(BuildContext context) {
     final featured = NewsData.featuredForCategory(_selectedCategory);
-    final latest = NewsData.latestForCategory(_selectedCategory);
+    final latest = _showAllLatest
+        ? NewsData.allLatestForCategory(_selectedCategory)
+        : NewsData.latestForCategory(_selectedCategory);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFBF8FA),
+      backgroundColor: _backgroundColor,
       body: Column(
         children: [
           _NewsListHeader(onBack: () => context.pop()),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -35,15 +48,22 @@ class _NewsListScreenState extends State<NewsListScreen> {
                   _CategoryChips(
                     selected: _selectedCategory,
                     onSelected: (category) {
-                      setState(() => _selectedCategory = category);
+                      setState(() {
+                        _selectedCategory = category;
+                        _showAllLatest = false;
+                      });
                     },
                   ),
                   const SizedBox(height: 12),
                   if (featured.isNotEmpty) ...[
-                    _FeaturedGrid(cards: featured.take(4).toList()),
+                    _FeaturedBentoGrid(cards: featured),
                     const SizedBox(height: 12),
                   ],
-                  _LatestNewsHeader(),
+                  _LatestNewsHeader(
+                    onSeeMore: () {
+                      setState(() => _showAllLatest = true);
+                    },
+                  ),
                   const SizedBox(height: 12),
                   ...latest.map(
                     (article) => Padding(
@@ -76,15 +96,18 @@ class _NewsListHeader extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(
             8,
             MediaQuery.of(context).padding.top + 8,
-            16,
+            8,
             16,
           ),
           child: Row(
             children: [
               IconButton(
                 onPressed: onBack,
-                icon: const Icon(Icons.arrow_back, color: Color(0xFF45474C)),
+                padding: const EdgeInsets.all(4),
+                constraints: const BoxConstraints(),
+                icon: const Icon(Icons.arrow_back, color: Color(0xFF45474C), size: 20),
               ),
+              const SizedBox(width: 8),
               const Text(
                 'News',
                 style: TextStyle(
@@ -98,11 +121,16 @@ class _NewsListHeader extends StatelessWidget {
               const Spacer(),
               IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.bookmark_border, color: Color(0xFF45474C)),
+                padding: const EdgeInsets.all(4),
+                constraints: const BoxConstraints(),
+                icon: const Icon(Icons.bookmark_border, color: Color(0xFF45474C), size: 20),
               ),
+              const SizedBox(width: 12),
               IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.info_outline, color: Color(0xFF45474C)),
+                padding: const EdgeInsets.all(4),
+                constraints: const BoxConstraints(),
+                icon: const Icon(Icons.info_outline, color: Color(0xFF45474C), size: 20),
               ),
             ],
           ),
@@ -120,6 +148,11 @@ class _CategoryChips extends StatelessWidget {
     required this.selected,
     required this.onSelected,
   });
+
+  String _chipLabel(String category) {
+    if (category == 'Finance & Banking') return 'Finance And Banking';
+    return category;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,15 +179,17 @@ class _CategoryChips extends StatelessWidget {
                     ? null
                     : Border.all(color: const Color(0xFFC5C6CD)),
               ),
-              child: Text(
-                category == 'Finance & Banking' ? 'Finance And Banking' : category,
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
-                  height: 1.33,
-                  letterSpacing: 0.6,
-                  color: isActive ? Colors.white : const Color(0xFF45474C),
+              child: Center(
+                child: Text(
+                  _chipLabel(category),
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                    height: 1.33,
+                    letterSpacing: 0.6,
+                    color: isActive ? Colors.white : const Color(0xFF45474C),
+                  ),
                 ),
               ),
             ),
@@ -165,24 +200,29 @@ class _CategoryChips extends StatelessWidget {
   }
 }
 
-class _FeaturedGrid extends StatelessWidget {
+class _FeaturedBentoGrid extends StatelessWidget {
   final List<FeaturedNewsCard> cards;
 
-  const _FeaturedGrid({required this.cards});
+  const _FeaturedBentoGrid({required this.cards});
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 1,
+    final width = MediaQuery.sizeOf(context).width - 32;
+    final cardSize = (width - 12) / 2;
+
+    return SizedBox(
+      height: cardSize * 2 + 12,
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          childAspectRatio: 1,
+        ),
+        itemCount: cards.length.clamp(0, 4),
+        itemBuilder: (context, index) => _FeaturedCard(card: cards[index]),
       ),
-      itemCount: cards.length,
-      itemBuilder: (context, index) => _FeaturedCard(card: cards[index]),
     );
   }
 }
@@ -194,79 +234,101 @@ class _FeaturedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          CachedNetworkImage(
-            imageUrl: card.imageUrl,
-            fit: BoxFit.cover,
-            placeholder: (_, __) => Container(color: const Color(0xFFE2E8F0)),
-            errorWidget: (_, __, ___) => Container(color: const Color(0xFFE2E8F0)),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x1A000000),
+            blurRadius: 6,
+            offset: Offset(0, 4),
           ),
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Color(0xE6101C2E),
-                  Color(0x00101C2E),
+          BoxShadow(
+            color: Color(0x0D000000),
+            blurRadius: 2,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            CachedNetworkImage(
+              imageUrl: card.imageUrl,
+              fit: BoxFit.cover,
+              placeholder: (_, __) => Container(color: const Color(0xFFE2E8F0)),
+              errorWidget: (_, __, ___) =>
+                  Container(color: const Color(0xFFE2E8F0)),
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    const Color(0xFF101C2E).withValues(alpha: 0.9),
+                    const Color(0xFF101C2E).withValues(alpha: 0),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: 12,
+              right: 12,
+              child: Icon(
+                Icons.bookmark_border,
+                size: 18,
+                color: Colors.white.withValues(alpha: 0.95),
+              ),
+            ),
+            Positioned(
+              left: 12,
+              right: 12,
+              bottom: 12,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    card.tag,
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 10,
+                      height: 1.5,
+                      letterSpacing: 0.5,
+                      color: Color(0xFFD9E2FF),
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    card.title,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      height: 1.375,
+                      color: Colors.white,
+                    ),
+                  ),
                 ],
               ),
             ),
-          ),
-          Positioned(
-            top: 12,
-            right: 12,
-            child: Icon(
-              Icons.bookmark_border,
-              size: 18,
-              color: Colors.white.withValues(alpha: 0.9),
-            ),
-          ),
-          Positioned(
-            left: 12,
-            right: 12,
-            bottom: 12,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  card.tag,
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 10,
-                    height: 1.5,
-                    letterSpacing: 0.5,
-                    color: Color(0xFFD9E2FF),
-                  ),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  card.title,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                    height: 1.375,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
 class _LatestNewsHeader extends StatelessWidget {
+  final VoidCallback onSeeMore;
+
+  const _LatestNewsHeader({required this.onSeeMore});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -285,22 +347,26 @@ class _LatestNewsHeader extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          Row(
-            children: const [
-              Text(
-                'See More',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
-                  height: 1.33,
-                  letterSpacing: 0.6,
-                  color: Color(0xFF0059C7),
+          GestureDetector(
+            onTap: onSeeMore,
+            behavior: HitTestBehavior.opaque,
+            child: Row(
+              children: const [
+                Text(
+                  'See More',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                    height: 1.33,
+                    letterSpacing: 0.6,
+                    color: Color(0xFF0059C7),
+                  ),
                 ),
-              ),
-              SizedBox(width: 4),
-              Icon(Icons.chevron_right, size: 12, color: Color(0xFF0059C7)),
-            ],
+                SizedBox(width: 4),
+                Icon(Icons.chevron_right, size: 12, color: Color(0xFF0059C7)),
+              ],
+            ),
           ),
         ],
       ),

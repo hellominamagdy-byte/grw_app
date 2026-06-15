@@ -52,7 +52,10 @@ class AppRouter {
       GoRoute(
         path: '/news-list',
         name: 'news-list',
-        builder: (context, state) => const NewsListScreen(),
+        builder: (context, state) {
+          final category = state.uri.queryParameters['category'];
+          return NewsListScreen(initialCategory: category);
+        },
       ),
     ],
   );

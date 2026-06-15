@@ -417,6 +417,10 @@ class NewsData {
   }
 
   static List<NewsArticle> latestForCategory(String category) {
+    return allLatestForCategory(category).take(4).toList();
+  }
+
+  static List<NewsArticle> allLatestForCategory(String category) {
     const mapping = {
       'Macroeconomic': 'Top 10 Trending',
       'Finance & Banking': 'Finance & Banking',
@@ -425,6 +429,17 @@ class NewsData {
       'Trade': 'Top 10 Trending',
     };
     final key = mapping[category] ?? category;
-    return byCategory(key).take(4).toList();
+    return byCategory(key);
+  }
+
+  static String? categoryArticleKey(String filterCategory) {
+    const mapping = {
+      'Macroeconomic': 'Top 10 Trending',
+      'Finance & Banking': 'Finance & Banking',
+      'Real Estate': 'Real Estate News',
+      'Markets': 'Market Watch',
+      'Trade': 'Top 10 Trending',
+    };
+    return mapping[filterCategory];
   }
 }
