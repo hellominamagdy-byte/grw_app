@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:grw_app/core/theme/grw_colors.dart';
 import 'package:grw_app/features/explore/explore_screen.dart';
@@ -194,98 +195,97 @@ class _TopBar extends StatelessWidget {
             right: 24,
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Avatar + greeting
-              Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF0059C7),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'M',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                        ),
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF0059C7),
+                        shape: BoxShape.circle,
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hi, Mina!',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: grw.textPrimary,
-                          height: 1.25,
-                        ),
-                      ),
-                      Text(
-                        dateStr,
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: grw.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-              // EGP pill + GRW logo
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 13, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: grw.card,
-                      borderRadius: BorderRadius.circular(999),
-                      border: Border.all(color: grw.borderLight),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          'EGP',
+                      child: const Center(
+                        child: Text(
+                          'M',
                           style: TextStyle(
                             fontFamily: 'Inter',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                            color: grw.textPrimary,
-                            letterSpacing: 0.6,
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                        const SizedBox(width: 4),
-                        Icon(Icons.keyboard_arrow_down,
-                            size: 14, color: grw.textSecondary),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Flexible(
+                      child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hi, Mina!',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            color: grw.textPrimary,
+                            height: 1.25,
+                          ),
+                        ),
+                        Text(
+                          dateStr,
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: grw.textSecondary,
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  const Text(
-                    'GRW',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 24,
-                      color: GrwColors.primary,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 13, vertical: 5),
+                decoration: BoxDecoration(
+                  color: grw.card,
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: grw.borderLight),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      'EGP',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        color: grw.textPrimary,
+                        letterSpacing: 0.6,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(Icons.keyboard_arrow_down,
+                        size: 14, color: grw.textSecondary),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: SvgPicture.asset(
+                    'assets/images/grw_logo.svg',
+                    height: 32,
+                    colorFilter: const ColorFilter.mode(
+                      Color(0xFF0059C7),
+                      BlendMode.srcIn,
                     ),
                   ),
-                ],
+                ),
               ),
             ],
           ),

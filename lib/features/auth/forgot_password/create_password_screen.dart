@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../core/widgets/grw_logo.dart';
 
 class CreatePasswordScreen extends StatefulWidget {
   const CreatePasswordScreen({super.key});
@@ -23,7 +24,9 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              const SizedBox(height: 48),
+              const SizedBox(height: 32),
+              const GrwLogo(height: 48),
+              const SizedBox(height: 24),
               Container(
                 width: 72, height: 72,
                 decoration: const BoxDecoration(
